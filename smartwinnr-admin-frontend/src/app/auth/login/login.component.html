@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card p-4 shadow" style="min-width: 320px; max-width: 420px; width: 100%;">
+    <h3 class="mb-3 text-center">
+      {{ mode === 'login' ? 'Sign In' : 'Create Account' }}
+    </h3>
+
+    <!-- mode toggle -->
+    <div class="d-flex justify-content-center mb-3">
+      <button
+        class="btn btn-sm me-2"
+        [class.btn-primary]="mode === 'login'"
+        [class.btn-outline-primary]="mode !== 'login'"
+        (click)="switchMode('login')"
+      >
+        Login
+      </button>
+      <button
+        class="btn btn-sm"
+        [class.btn-primary]="mode === 'register'"
+        [class.btn-outline-primary]="mode !== 'register'"
+        (click)="switchMode('register')"
+      >
+        Register
+      </button>
+    </div>
+
+    <div class="text-danger mb-2" *ngIf="error">{{ error }}</div>
+
+    <!-- LOGIN FORM -->
+    <form *ngIf="mode === 'login'" (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          name="loginEmail"
+          [(ngModel)]="loginEmail"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          name="loginPassword"
+          [(ngModel)]="loginPassword"
+          required
+        />
+      </div>
+
+      <button
+        class="btn btn-primary w-100"
+        [disabled]="loginForm.invalid || loading"
+      >
+        {{ loading ? 'Signing in...' : 'Login' }}
+      </button>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form
+      *ngIf="mode === 'register'"
+      (ngSubmit)="onRegister()"
+      #registerForm="ngForm"
+    >
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          name="registerName"
+          [(ngModel)]="registerName"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          name="registerEmail"
+          [(ngModel)]="registerEmail"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          name="registerPassword"
+          [(ngModel)]="registerPassword"
+          required
+        />
+      </div>
+
+      <button
+        class="btn btn-primary w-100"
+        [disabled]="registerForm.invalid || loading"
+      >
+        {{ loading ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+<div class="mb-3">
+  <h3>Analytics Dashboard</h3>
+  <p class="text-muted">
+    Overview of active users, signups, sales, and user sports interests.
+  </p>
+</div>
+
+<div *ngIf="loading" class="alert alert-info">Loading metrics...</div>
+
+<!-- Summary Cards -->
+<div *ngIf="summary" class="row g-3 mb-4">
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Total Users</h6>
+        <h3>{{ summary.totalUsers || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Active Users</h6>
+        <h3>{{ summary.activeUsers || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Total Sales</h6>
+        <h3>{{ summary.totalSales || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>New Signups Today</h6>
+        <h3>{{ summary.newSignupsToday || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Signups + Sales -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Signups (Last 7 Days)</h6>
+        <pre class="small text-muted">
+{{ signupsChartLabels }} -> {{ signupsChartData }}
+        </pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Sales by Product</h6>
+        <pre class="small text-muted">
+{{ salesChartLabels }} -> {{ salesChartData }}
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sports pie + table -->
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>User Sports Interests (Pie Chart)</h6>
+
+        <div
+          class="d-flex justify-content-center align-items-center"
+          *ngIf="sportsInterests.length; else noInterests"
+        >
+          <div class="pie-chart" [style.background]="pieBackground"></div>
+        </div>
+
+        <ng-template #noInterests>
+          <p class="text-muted mb-0">No sports interests submitted yet.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6>Top Sports Interests (Details)</h6>
+
+        <table
+          class="table table-sm"
+          *ngIf="sportsInterests.length; else noInterestsTable"
+        >
+          <thead>
+            <tr>
+              <th>Sport</th>
+              <th>Users</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of sportsInterests">
+              <td>{{ s.sport }}</td>
+              <td>{{ s.count }}</td>
+              <td>{{ s.percentage }}%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ng-template #noInterestsTable>
+          <p class="text-muted mb-0">No data yet.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

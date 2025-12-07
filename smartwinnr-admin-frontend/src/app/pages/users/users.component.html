@@ -1,0 +1,106 @@
+<h3>Manage Users</h3>
+<p class="text-muted">
+  Admin controls to manage user accounts (create, activate/deactivate).
+</p>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<!-- Create user form (admin only) -->
+<div class="card mb-4" *ngIf="auth.isAdmin() && !error">
+  <div class="card-body">
+    <h5 class="card-title">Create New User</h5>
+    <form (ngSubmit)="createNewUser()" #f="ngForm" class="row g-2">
+      <div class="col-12 col-md-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Name"
+          name="name"
+          [(ngModel)]="newUser.name"
+          required
+        />
+      </div>
+      <div class="col-12 col-md-3">
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Email"
+          name="email"
+          [(ngModel)]="newUser.email"
+          required
+        />
+      </div>
+      <div class="col-12 col-md-3">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Password"
+          name="password"
+          [(ngModel)]="newUser.password"
+          required
+        />
+      </div>
+      <div class="col-12 col-md-2">
+        <select
+          class="form-select"
+          name="role"
+          [(ngModel)]="newUser.role"
+          required
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-1 d-grid">
+        <button
+          class="btn btn-primary"
+          [disabled]="f.invalid || creating"
+          type="submit"
+        >
+          {{ creating ? 'Creating...' : 'Add' }}
+        </button>
+      </div>
+    </form>
+    <div *ngIf="createError" class="text-danger mt-2">{{ createError }}</div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="alert alert-info">Loading users...</div>
+
+<table
+  class="table table-striped table-hover"
+  *ngIf="!loading && !error && users.length"
+>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Active</th>
+      <th>Created</th>
+      <th *ngIf="auth.isAdmin()">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let u of users">
+      <td>{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.role }}</td>
+      <td>
+        <span class="badge" [ngClass]="u.isActive ? 'bg-success' : 'bg-secondary'">
+          {{ u.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </td>
+      <td>{{ u.createdAt | date: 'short' }}</td>
+      <td *ngIf="auth.isAdmin()">
+        <button class="btn btn-sm btn-outline-primary me-2" (click)="toggleActive(u)">
+          {{ u.isActive ? 'Deactivate' : 'Activate' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!loading && !error && !users.length" class="alert alert-info">
+  No users yet. Create one above.
+</div>
